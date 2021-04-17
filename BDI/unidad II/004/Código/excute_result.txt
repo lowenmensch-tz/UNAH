@@ -1,0 +1,72 @@
+--------------
+DROP DATABASE IF EXISTS AdvancedSQLProcedures
+--------------
+
+--------------
+CREATE DATABASE AdvancedSQLProcedures CHARACTER SET utf8
+--------------
+
+--------------
+CREATE TABLE Student(
+        id SERIAL PRIMARY KEY, 
+        jso_record JSON NOT NULL COMMENT "Documento con name, age, uid"
+    ) COMMENT "Estudiantes de excelencia académica"
+--------------
+
+--------------
+INSERT INTO Student(jso_record) VALUES
+        ('{"name":"Pedro García", "age":20 , "uid":"0301200112312"}'),
+        ('{"name":"Juan López", "age":21 , "uid":"0501000001234"}'),
+        ('{"name":"María Ala", "age":20 , "uid":"1203000012341"}'),
+        ('{"name":"Alejandro Lara", "age":21 , "uid":"1803200012341"}'),
+        ('{"name":"Alejandro Almendarez", "age":20 , "uid":"0802199999999"}'),
+        ('{"name":"Erick López", "age":19 , "uid":"0102199912341"}')
+--------------
+
+--------------
+CREATE FUNCTION fn_jsonName(jso_field JSON) RETURNS TEXT
+        BEGIN 
+            
+                RETURN JSON_UNQUOTE(JSON_EXTRACT(jso_field, "$.name"));
+
+        END
+--------------
+
+--------------
+CREATE FUNCTION fn_jsonUID(jso_field JSON) RETURNS TEXT
+        BEGIN 
+
+                RETURN JSON_UNQUOTE(JSON_EXTRACT(jso_field, "$.uid"));
+
+        END
+--------------
+
+--------------
+SELECT
+        fn_jsonName(jso_record) AS "Nombre del estudiante",
+
+        CASE 
+            WHEN fn_jsonUID(jso_record) REGEXP "^((0[178])|(18))\\d{11}$" THEN "Recorrido 1" 
+            WHEN fn_jsonUID(jso_record) REGEXP "^((0[35])|(12))\\d{11}$" THEN "Recorrido 2" 
+        END AS "Recorrido"
+    FROM
+        Student
+    WHERE
+        fn_jsonUID(jso_record) REGEXP "^((0[13578])|(1[28]))\\d{11}$"
+    ORDER BY 
+        CASE 
+            WHEN fn_jsonUID(jso_record) REGEXP "^((0[178])|(18))\\d{11}$" THEN "Recorrido 1" 
+            WHEN fn_jsonUID(jso_record) REGEXP "^((0[35])|(12))\\d{11}$" THEN "Recorrido 2" 
+        END ASC
+--------------
+
++-----------------------+-------------+
+| Nombre del estudiante | Recorrido   |
++-----------------------+-------------+
+| Alejandro Lara        | Recorrido 1 |
+| Alejandro Almendarez  | Recorrido 1 |
+| Erick López           | Recorrido 1 |
+| Pedro García          | Recorrido 2 |
+| Juan López            | Recorrido 2 |
+| María Ala             | Recorrido 2 |
++-----------------------+-------------+
