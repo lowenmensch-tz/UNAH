@@ -8,21 +8,21 @@ Examen 3 Digital
 Examen #3 Práctico - Unidad 2
 Lea primero 
 
-    Entre más enriquecidas sean sus respuestas, usted obtendrá una mejor calificación.
+- Entre más enriquecidas sean sus respuestas, usted obtendrá una mejor calificación.
 
-    No se confíe de los comentarios que escuchó o de afirmaciones que nunca probó. Muchos comentarios en clase se complementaron con “excelente, pruebe lo que indica su compañero” ya que dichos comentarios podrían tener algo de “correctitud” pero al mismo tiempo podrían no entregar el resultado esperado. Sin haberlo probado usted por su cuenta, arrastrará omisiones en la implementación de código. 
+- No se confíe de los comentarios que escuchó o de afirmaciones que nunca probó. Muchos comentarios en clase se complementaron con “excelente, pruebe lo que indica su compañero” ya que dichos comentarios podrían tener algo de “correctitud” pero al mismo tiempo podrían no entregar el resultado esperado. Sin haberlo probado usted por su cuenta, arrastrará omisiones en la implementación de código. 
 
-    Haga uso del 100% del conocimiento exclusivo de la Unidad 2 de esta asignatura (contenido como procedimientos almacenados, triggers, expresiones regulares, entre muchos muchos otros). 
+- Haga uso del 100% del conocimiento exclusivo de la Unidad 2 de esta asignatura (contenido como procedimientos almacenados, triggers, expresiones regulares, entre muchos muchos otros). 
 
-    El SGBD de examen es idéntico al usado en clase. 
+- El SGBD de examen es idéntico al usado en clase. 
 
-    Es obligatorio el aliasing en el DML y DDL.
+- Es obligatorio el aliasing en el DML y DDL.
 
-    Mantenga sus clases (imports) separadas de su main de Jupyter.
+- Mantenga sus clases (imports) separadas de su main de Jupyter.
 
-    Para asegurar una buena revisión haga su código sumamente ordenado, implementando TABULADOS y SALTOS DE LÍNEA en su Python y SQL.
+- Para asegurar una buena revisión haga su código sumamente ordenado, implementando TABULADOS y SALTOS DE LÍNEA en su Python y SQL.
 
-    El examen es a libro abierto. Hay ejercicios que usan código de clase, por lo que el mal uso de dicho código implica un ejercicio incorrecto (ya que el código no es creado por el estudiante sino copiado y modificado desde las evidencias de clase).
+- El examen es a libro abierto. Hay ejercicios que usan código de clase, por lo que el mal uso de dicho código implica un ejercicio incorrecto (ya que el código no es creado por el estudiante sino copiado y modificado desde las evidencias de clase).
 
 
 Enunciado de Examen
@@ -39,13 +39,13 @@ Para hacer este programa Python con acceso a base de datos, los diseñadores del
 
 En sus clases de Python (los archivos .py que viven afuera del archivo de Jupyter Main) deben de actualizarse los siguientes elementos. Estos archivos .py serán importados desde su Jupyter Main tal y como fue hecho en clase (10%).
 
-    Debe existir un método select() el cual debe recibir la query, junto con un arreglo con el encabezado de la tabla a seleccionar, y junto con el máximo límite de resultados a imprimir. Este método ya debe imprimir el resultado directamente en pantalla, en lugar de retornarlo. Este método debe ir contando internamente cuántas ejecuciones select posee su programa, mediante una variable local a la clase.
+- Debe existir un método select() el cual debe recibir la query, junto con un arreglo con el encabezado de la tabla a seleccionar, y junto con el máximo límite de resultados a imprimir. Este método ya debe imprimir el resultado directamente en pantalla, en lugar de retornarlo. Este método debe ir contando internamente cuántas ejecuciones select posee su programa, mediante una variable local a la clase.
 
-    Debe existir un método dms() el cual debe servir para ejecutar exclusivamente instrucciones dms no fetch. Este método debe ir contando internamente cuántas ejecuciones dms posee su programa, mediante una variable local a la clase.
+- Debe existir un método dms() el cual debe servir para ejecutar exclusivamente instrucciones dms no fetch. Este método debe ir contando internamente cuántas ejecuciones dms posee su programa, mediante una variable local a la clase.
 
-    Debe existir un método dds() el cual debe servir para ejecutar exclusivamente instrucciones dds no fetch. Este método debe ir contando internamente cuántas ejecuciones dds posee su programa, mediante una variable local a la clase.
+- Debe existir un método dds() el cual debe servir para ejecutar exclusivamente instrucciones dds no fetch. Este método debe ir contando internamente cuántas ejecuciones dds posee su programa, mediante una variable local a la clase.
 
-    Usted creará los métodos necesarios para resolver el problema a continuación, reutilizando los tres elementos anteriores.
+- Usted creará los métodos necesarios para resolver el problema a continuación, reutilizando los tres elementos anteriores.
 
 Cada elemento de la lista siguiente debe de estar compuesto de su respectivo código de Python y SQL, junto con la ejecución del método de la instancia. Su entregable debe ser un archivo .7z el cual debe contener un JupyterMain de Jupyter Notebook, junto con todos los archivos .py que use su main. Debe usar la misma nomenclatura enseñada por su profesor en clase, indicando así que el 100% de su examen fue generado por usted, quien conoce dicha nomenclatura (código python, queries SQL, comentarios markdown, respuestas, etc).
 
