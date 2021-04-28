@@ -7,7 +7,7 @@ import re
 """
     @author kenneth.cruz@unah.hn
     @version 0.1.0
-    @date 2021/04/27
+    @date 2021/04/28
 """
 
 class MySQLEngine: 
@@ -138,6 +138,18 @@ class MySQLEngine:
             return self.link.fetchmany(size=size)
         else: 
             return self.link.fetchall()
+
+    """
+        SELECT implementando paginador
+    """
+    def selectPage(self, query: str, page=0, count=10): 
+
+        query = re.sub(r"\s+[Ll][Ii][Mm][Ii][Tt]\s+\d+([, ]\d+)?\s*;\s*", "", query)
+
+        query = ("{} LIMIT {},{};".format(query, page, count))
+
+        self.link.execute(query)
+        content = self.link.fetchall()
 
     def closeConnection(self): 
 
