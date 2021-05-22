@@ -37,3 +37,21 @@ Cabe mencionar que a cada persona se le identificara si es empleado o no del Aer
 - **Control de entrada/salida**
   - Actividad que realiza la persona (Entrada o salida)
   - Fechay hora de la actividad
+
+### Atributos y entidades
+
+**Entidades identificadas**
+- Cliente
+- Empleado
+- Control de entrada y salida
+
+
+## Diagrama ER 
+
+Se utiliza la nomenclatura de Peter Chen para la realización del diagrama Entidad-Relación:
+
+![Diagrama entidad relación](./Documentación/er_airCanadaCenter.jpg)
+
+## Diagrama Relacional 
+
+![]()
