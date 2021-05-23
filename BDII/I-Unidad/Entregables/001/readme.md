@@ -55,3 +55,95 @@ Se utiliza la nomenclatura de Peter Chen para la realización del diagrama Entid
 ## Diagrama Relacional 
 
 ![](./Documentación/relational_airCanadaCenter.png)
+
+
+## Configuración de entorno: WSL + SQLite3
+
+WSL (Windows Subsystem for Linux) es una virtualización nativa de Ubuntu para Windows 10, funciona como máquina virtual optimizada, con la salvedad que utiliza el minímo de recursos y viene con algunas configuraciones por defecto (python, git, net-tools...). 
+
+### instalar SQLlite en WSL (equivalente para Debian-Ubuntu)
+
+**Buscamos el paquetes sqlite3**:
+
+```Shell
+sudo search install sqlite3
+```
+![](./Documentación/images/1.png)
+
+Para este caso, el paquete `sqlite3` ya está instalado.
+
+![](./Documentación/images/2.png)
+
+<br>
+
+**De no tener el paquete instalado en el sistema**:
+
+```Shell
+$ sudo apt install sqlite3
+```
+
+<br>
+
+Una vez instalado, para realizar el equivalente a `CREATE DATABASE nameDB;` en SQLite debe crear un archivo con extensión *.db*, utilizando las bondades de Linux, creamos un archivo con el comando `touch filename.extension`
+
+```Shell
+$ touch nameDB.db
+```
+
+<br>
+
+Para ejecutar los statements (la definición o manipulación) en su base de datos lo puede hacer desde el CLI o puede crear un archivo con extensión `.sql` y ejecutar estos statements directamente en su base de datos. 
+
+para este ejemplo se ha utilizado dos archivos:
+- dds_airCanadaCenter.sql 
+- dms_airCanadaCenter.sql 
+
+Uno con los statements correspondiente a la definición de la base de datos y uno correspondiente a los statements de inserción de datos.  
+
+Se aprovecha las virtudes de la shell de linux y se utiliza un operador de control de flujo (`<`). 
+
+```Shell
+$ sqlite3 databasefile.db < PATH/statements.sql
+```
+
+Para ejecutar los statements sobre la base de datos de SQLite.  
+
+<br>
+
+Se ilustra en la siguienta imagen utilizando los archivo (statments) de prueba: 
+
+![](./Documentación/images/5.png)
+
+<br>
+
+El equivalente de `USE nameDB;` en SQLite para utilizar la base de datos es: 
+
+```Shell
+$ sqlite3 nameDB.db
+```
+
+Para nuestro caso de ejemplo:
+
+![](./Documentación/images/3.png)
+
+<br>
+
+El CLI en SQLite tiene la siguiente forma: 
+
+![](./Documentación/images/4.png)
+
+<b>
+
+Se utiliza `.table` para visualizar las entidades dentro de la base de datos.  
+Una vez hecho esto, podemos utilizar cualquier cláusula permitida dentro del estándar SQL para visualizar datos dentro de la base de datos.
+
+![](./Documentación/images/7.png)
+
+```SQL
+SELECT * FROM User;
+```
+
+<br>
+
+Para salir del CLI de SQLite usamos `.exit`.
+
