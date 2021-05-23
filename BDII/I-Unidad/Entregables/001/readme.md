@@ -54,4 +54,4 @@ Se utiliza la nomenclatura de Peter Chen para la realización del diagrama Entid
 
 ## Diagrama Relacional 
 
-![]()
+![](./Documentación/relational_airCanadaCenter.png)
