@@ -59,14 +59,16 @@ Se utiliza la nomenclatura de Peter Chen para la realización del diagrama Entid
 
 ## Configuración de entorno: WSL + SQLite3
 
-WSL (Windows Subsystem for Linux) es una virtualización nativa de Ubuntu para Windows 10, funciona como máquina virtual optimizada, con la salvedad que utiliza el minímo de recursos y viene con algunas configuraciones por defecto (python, git, net-tools...). 
+WSL (Windows Subsystem for Linux) es una virtualización nativa de Ubuntu para Windows 10, funciona como máquina virtual optimizada, con la salvedad que utiliza el minímo de recursos y viene con algunas configuraciones por defecto (python, git, net-tools...).  
+  
+Podemos utilizar WSL como una máquina virtual instalando programas de distinta índole (MySQL, MariaDB, Python...) sin afectar el sistema de archivos de Windows. Es decir, se puede ejecutar scripts de Python desde WSL sin la necesidad de instalar Python en Windows.
 
 ### instalar SQLlite en WSL (equivalente para Debian-Ubuntu)
 
 **Buscamos el paquetes sqlite3**:
 
 ```Shell
-sudo search install sqlite3
+$ sudo apt search sqlite3
 ```
 ![](./Documentación/images/1.png)
 
