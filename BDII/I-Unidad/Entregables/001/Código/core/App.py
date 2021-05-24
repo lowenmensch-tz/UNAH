@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
+import re
 from os import access
 from core.SQLiteEngine import SQLiteEngine
 from core.GenerateCode import AccessCode
@@ -18,13 +19,16 @@ class App(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         
         self.engine = SQLiteEngine()
+        self.phonenumber = {}
+        self.count = 0
         
         #self.registerPushButton.clicked.connect( self.verify_access_code )
         self.operDoorPushButton.clicked.connect( self.insert_user_in_control )
-
         self.tabWidget.currentChanged.connect( self.data_visualization )
-            
-        self.tabWidget.currentChanged.connect( self.user_register )
+        #self.tabWidget.currentChanged.connect( self.user_register )
+
+        self.addPushButton.clicked.connect( self.phone_register )
+        self.registerPushButton.clicked.connect( self.user_register )
 
 
     #Caja de mensajes    
@@ -133,3 +137,18 @@ class App(QMainWindow, Ui_MainWindow):
         #Registro de usuario
         if self.tabWidget.currentIndex() == 1: 
             pass
+
+
+
+    """
+        Registro del número de teléfono
+    """
+    def phone_register(self): 
+        
+        #Registro de usuario
+        if self.tabWidget.currentIndex() == 1: 
+            area = (self.areaLineEdit.text()).strip()
+            phone = (self.phoneNumberLineEdit.text()).strip()
+            
+            self.phonenumber[str(self.count)] = [area, phone]
+            
