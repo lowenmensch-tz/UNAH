@@ -19,22 +19,22 @@ INSERT INTO Country(tex_name, tex_iso) VALUES
 
 
 -- Clientes
-INSERT INTO User(id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname) VALUES
- (1, 'Saraann', 'Eula', 'Jull', 'Clewer'),
- (3, 'Joannes', 'Jarvis', 'Ryson', 'Varty'),
- (4, 'Ave', 'Fredia', 'Impson', 'Aicheson'),
- (5, 'Salli', 'Elmore', 'Panchin', 'Nisen'),
- (5, 'Clari', 'Poul', 'Gotling', 'Gouldie'),
- (5, 'Shelby', 'Latisha', 'Broadberrie', 'Adnett'),
- (6, 'Eduino', 'Corissa', 'Hearne', 'Dosdill')
+INSERT INTO User(id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, tex_accessCode) VALUES
+ (1, 'Saraann', 'Eula', 'Jull', 'Clewer', 'cli-0001-6zD'),
+ (3, 'Joannes', 'Jarvis', 'Ryson', 'Varty', 'cli-0002-0F4'),
+ (4, 'Ave', 'Fredia', 'Impson', 'Aicheson', 'cli-0003-1yF'),
+ (5, 'Salli', 'Elmore', 'Panchin', 'Nisen', 'cli-0004-RTE'),
+ (5, 'Clari', 'Poul', 'Gotling', 'Gouldie', 'cli-0005-2Dh'),
+ (5, 'Shelby', 'Latisha', 'Broadberrie', 'Adnett', 'cli-0006-WEo'),
+ (6, 'Eduino', 'Corissa', 'Hearne', 'Dosdill,', 'cli-0007-qD2')
 ;
 
 
 -- Empleados
-INSERT INTO User(id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type) VALUES
- (2, 'Guntar', 'Rubina', 'Kemm', 'Barnewille', 1),
- (2, 'Deane', 'Kingsley', 'Aish', 'Idenden', 1),
- (2, 'Beulah', 'Gordy', 'Knagges', 'Mockford', 1)
+INSERT INTO User(id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type, tex_accessCode) VALUES
+ (2, 'Guntar', 'Rubina', 'Kemm', 'Barnewille', 1, 'emp-0008-pyh'),
+ (2, 'Deane', 'Kingsley', 'Aish', 'Idenden', 1, 'emp-0009-EOo'),
+ (2, 'Beulah', 'Gordy', 'Knagges', 'Mockford',1, 'emp-0010-6lU')
 ;
 
 
@@ -63,6 +63,7 @@ INSERT INTO Client(id_user_fk, tex_passport) VALUES
 ;
 
 
+-- identicador empleado
 INSERT INTO Employee(id_user_fk, dob_salary, tex_hiringDate) VALUES
  (8, 16840.19, '2023-02-27 00:00:00'),
  (9, 10526.36, '2021-05-02 00:00:00'),

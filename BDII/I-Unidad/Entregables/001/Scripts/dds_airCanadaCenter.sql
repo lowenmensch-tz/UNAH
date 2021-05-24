@@ -4,6 +4,7 @@
     @date 2021/05/22
 */
 
+
 -- Entidad País, contiene la información de cada país del mundo
 CREATE TABLE Country(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -21,6 +22,7 @@ CREATE TABLE User(
     tex_firstsurname  TEXT NOT NULL, -- Primer apellido del usuario
     tex_secondsurname  TEXT NOT NULL, -- Segundo apellido del usuario
     bit_type INT2 DEFAULT 0 NOT NULL, -- Tipo de Usuario (0 Cliente | 1 Empleado)
+    tex_accessCode VARCHAR(12) UNIQUE NOT NULL, -- Código de acceso al aeropuerto
 
     FOREIGN KEY (id_country_fk) REFERENCES Country(id)
 );
@@ -51,6 +53,7 @@ CREATE TABLE Client(
 CREATE TABLE Employee(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     id_user_fk INTEGER  NOT NULL, -- Definición de Clave foránea que hace referencia a la entidad Usuario, 
+    -- tex_codEmployee VARCHAR(12) NOT NULL UNIQUE,-- Código del empleado, es único y alfanúmerico (acepta letras y números)
     dob_salary DOUBLE  NOT NULL, -- Salario del empleado
     tex_hiringDate TEXT NOT NULL, -- Fecha de contratación, con el siguiente formato: "YYYY-MM-DD HH:MM:SS.SSS" 
 
@@ -58,6 +61,8 @@ CREATE TABLE Employee(
     FOREIGN KEY (id_user_fk) REFERENCES User(id)
 );
 
+
+-- Bitacora de entrada/salida de personas con acceso al aeropuerto
 CREATE TABLE Control(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     bit_type INT2 DEFAULT 0 NOT NULL, -- Tipo de control (0 Salida | 1 Entrada)
@@ -65,7 +70,7 @@ CREATE TABLE Control(
 );
 
 
--- Entidad transitiva entre las relaciones Usuario y Control
+-- Entidad intersección entre las relaciones Usuario y Control
 CREATE TABLE UserControl(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     id_user_fk INTEGER  NOT NULL, -- Definición de Clave foránea que hace referencia a la entidad Usuario, 
