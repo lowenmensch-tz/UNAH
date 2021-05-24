@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import sqlite3
+import string
 import re
-from os import access
+from os import access, terminal_size
 from core.SQLiteEngine import SQLiteEngine
 from core.GenerateCode import AccessCode
 from core.MainWindow import Ui_MainWindow
@@ -29,6 +30,7 @@ class App(QMainWindow, Ui_MainWindow):
 
         self.addPushButton.clicked.connect( self.phone_register )
         self.registerPushButton.clicked.connect( self.user_register )
+        self.deletePushButton.clicked.connect( self.delete_phonenumber )
 
 
     #Caja de mensajes    
@@ -134,10 +136,129 @@ class App(QMainWindow, Ui_MainWindow):
     """
     def user_register(self):
         
+        """
+        self.userLineEdit
+        self.namesLineEdit
+        self.lastnamesLineEdit
+        self.countryComboBox
+        self.employeeCheckBox
+        self.salaryLineEdit
+        self.hiringDateEdit
+        """
         #Registro de usuario
         if self.tabWidget.currentIndex() == 1: 
-            pass
+            
+            if self.validate_personal_date(): 
 
+                access_code = ""
+                country = (self.countryComboBox.text()).strip()
+                name = ((self.namesLineEdit.text()).strip()).split(" ")
+                lastname = ((self.lastnamesLineEdit.text()).strip()).split(" ")
+
+                #Empleado
+                if self.validate_employee(): 
+                    
+                    access_code = (AccessCode()).generate_access_code(id_user=self.get_last_id_user(), type_user=1)
+                    salary = float((self.salaryLineEdit.text()).strip())
+
+                    self.engine.insert(
+                            table="User", 
+                            parameters="id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type, tex_accessCode", 
+                            values='(?, ?, ?, ?, ?, ?, ?)', 
+                            data=(
+                                    self.engine.select(query="SELECT id FROM Country WHERE country = {}".format(country)), name[0], name[1], 
+                                    lastname[0], lastname[1], 1, access_code
+                                )
+                        )
+
+                    if len(self.phonenumber): 
+                        [
+                            self.engine.insert(
+                                    table="Phonenumber", 
+                                    parameters="id_user_fk, tex_prefix, tex_number",
+                                    values='(?, ?, ?)',
+                                    data=(
+                                        self.get_last_id_user(),
+                                        phonenumber[0], 
+                                        phonenumber[1] 
+                                    )
+                                )
+                            
+                            for k, phonenumber in self.phonenumber.items()
+                        ]
+
+                    self.engine.insert(
+                            table="Employee", 
+                            parameters="id_user_fk, dob_salary", 
+                            values='(?, ?)', 
+                            data=(
+                                    self.get_last_id_user(),
+                                    salary     
+                            )
+                        )
+
+                    self.message_box(title="Mensaje", message="El usuario: {} Se ha agregado con éxito".format(name[0] + ' ' + lastname[0]))
+                    self.message_box(title="Mensaje", message="Su código de acceso es: {}".format(access_code))
+
+    
+    """ 
+        Validación de:
+        1. Nombres
+        2. Apellidos
+        3. País
+    """
+    def validate_personal_date(self) -> bool: 
+        
+        name = ((self.namesLineEdit).strip()).split(" ")
+        lastname = ((self.lastnamesLineEdit).strip()).split(" ")
+        country = (self.countryComboBox).strip()
+
+        if name[0] == "" or len(name) < 2: 
+            self.message_box(title="Atención", message="Revise el Formato:\n1. Nombre vacío\nEs necesario ingresar dos nombres")
+            return False
+        elif lastname[0] == "" or len(lastname) < 2: 
+            self.message_box(title="Atención", message="Revise el Formato:\n1. Apellido vacío\nEs necesario ingresar dos apellidos")
+            return False
+        elif country == "":
+            self.message_box(title="Atención", message="Revise el Formato:\n1. No se ha seleccionado ciudad")
+            return False
+        else: 
+            return True
+
+    
+    """
+        Validación del empleado
+    """
+    def validate_employee(self) -> bool:
+        
+        if self.employeeCheckBox.isChecked():
+            salary = (self.salaryLineEdit.text()).strip()
+            hire_date = (self.self.hiringDateEdit.text()).strip()
+
+            if not salary.isnumeric(): 
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Solo números para Salario")
+                return False
+            elif hire_date == "":
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Seleccione una fecha de contratación")
+                return False
+            else: 
+                return True
+                
+                
+    """
+        Validación del cliente
+    """
+    def validate_client(self) -> bool:
+        
+        passport = (self.userLineEdit.text()).strip()
+        if passport == "":
+            self.message_box(title="Atención", message="Revise el Formato:\n1. Ingrese su pasaporte")
+            return False
+        elif re.match(r"[a-zA-Z0-9]{12}", passport): 
+            self.message_box(title="Atención", message="Revise el Formato:\n1. La longitud del pasaporte es erronea (12 carácteres)\n2. Solo alfanúmericos")
+            return False
+        else: 
+            return True
 
 
     """
@@ -150,5 +271,45 @@ class App(QMainWindow, Ui_MainWindow):
             area = (self.areaLineEdit.text()).strip()
             phone = (self.phoneNumberLineEdit.text()).strip()
             
-            self.phonenumber[str(self.count)] = [area, phone]
+            if (area == "" or phone == ""):
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Area o número de teléfono vacío")
+
+            elif not re.match(r"\+\d{1,3}", area): 
+                self.message_box(title="Atención", message="Revise el Formato:\n1. El número de área debe cumplir: +###, +## o +#\n2. Solo números")
+                self.areaLineEdit.setText("")
+                    
+            elif not re.match(r"\d+", phone): 
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Solo números para el número de teléfono")
+                self.phoneNumberLineEdit.setText()
+                    
+            else: 
+
+                self.phonenumber[self.count] = [area, phone]
+                self.message_box(title="Mensaje", message="Agregado éxitosamente")
+                self.count +=1
+
+                self.areaLineEdit.setText("")
+                self.phoneNumberLineEdit.setText("")
+
+                print(self.phonenumber)
             
+    
+
+    """
+        Eliminar número actual
+    """
+    def delete_phonenumber(self): 
+        
+        self.areaLineEdit.setText()
+        self.phoneNumberLineEdit.setText()
+
+    
+    """
+        Obtiene el id del último usuario registrado
+    """
+    def get_last_id_user(self) -> int: 
+        try: 
+            get_last_id_user = (self.engine.select(query=" SELECT id FROM vw_getLastIdUser")).pop()
+            return get_last_id_user[0] + 1
+        finally: 
+            return 1
