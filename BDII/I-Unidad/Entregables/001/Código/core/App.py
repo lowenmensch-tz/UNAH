@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
+import sqlite3
 from os import access
+from core.SQLiteEngine import SQLiteEngine
+from core.GenerateCode import AccessCode
 from core.MainWindow import Ui_MainWindow
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtWidgets import QMainWindow
-from core.SQLiteEngine import SQLiteEngine
+from PyQt5.QtWidgets import QTreeWidgetItem
 
 
 class App(QMainWindow, Ui_MainWindow):
@@ -18,8 +21,12 @@ class App(QMainWindow, Ui_MainWindow):
         
         #self.registerPushButton.clicked.connect( self.verify_access_code )
         self.operDoorPushButton.clicked.connect( self.insert_user_in_control )
-        
-    
+
+        self.tabWidget.currentChanged.connect( self.data_visualization )
+            
+        self.tabWidget.currentChanged.connect( self.user_register )
+
+
     #Caja de mensajes    
     def message_box(self, title: str, message: str) -> None: 
         
@@ -43,7 +50,6 @@ class App(QMainWindow, Ui_MainWindow):
             else: 
                 self.message_box("Mensaje", "Código de usuario incorrecto")
                 self.idLineEdit.setText("")
-                self.idLineEdit.cursor()
                 return False
 
         except IndexError as ie: 
@@ -83,5 +89,47 @@ class App(QMainWindow, Ui_MainWindow):
             
             self.engine.insert(table="UserControl", parameters="id_user_fk, id_control_fk", values='(?, ?)', data=(id_user, id_control))
 
+            self.message_box(title="Mensaje", message="Se ha agregado con éxito")
+            self.idLineEdit.setText("")
+
         except IndexError as ie: 
             print("Error al traer dato de la base de datos 'control'")
+
+
+    """
+        Visualización de la bitácora en el QTreewidget
+         [('Clari', 'Entra', '2021-05-24 04:58:53')]
+    """
+    def data_visualization(self) -> None: 
+        
+        try: 
+
+            #Control
+            if self.tabWidget.currentIndex() == 3: 
+                query = "SELECT name, access, type, date FROM vw_binacle"
+                transaction = self.engine.select(query)
+                print( transaction )
+
+                items = []
+
+                self.treeWidget.clear()
+
+                for row in transaction:
+                    items.append( QTreeWidgetItem([row[0], row[1], row[2], row[3]]) )
+
+                self.treeWidget.insertTopLevelItems(0, items)
+                self.treeWidget.show()
+
+        except IndexError as ie: 
+            print("Error al traer dato de la base de datos 'verify_access_code'")
+
+
+
+    """
+        Registro de los usuarios
+    """
+    def user_register(self):
+        
+        #Registro de usuario
+        if self.tabWidget.currentIndex() == 1: 
+            pass

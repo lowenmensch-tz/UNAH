@@ -37,6 +37,10 @@ CREATE VIEW vw_binacle
                 WHEN Control.bit_type = 0 THEN 'Sale'
                 ELSE 'Entra'
             END AS access, 
+            CASE 
+                WHEN User.bit_type = 0 THEN 'Cliente'
+                ELSE 'Empleado'
+            END AS type, 
             Control.tim_date AS date
         FROM 
             User 
