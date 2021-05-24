@@ -151,7 +151,7 @@ class App(QMainWindow, Ui_MainWindow):
             if self.validate_personal_date(): 
 
                 access_code = ""
-                country = (self.countryComboBox.text()).strip()
+                country = str(self.countryComboBox.currentText()).strip()
                 name = ((self.namesLineEdit.text()).strip()).split(" ")
                 lastname = ((self.lastnamesLineEdit.text()).strip()).split(" ")
 
@@ -209,9 +209,9 @@ class App(QMainWindow, Ui_MainWindow):
     """
     def validate_personal_date(self) -> bool: 
         
-        name = ((self.namesLineEdit).strip()).split(" ")
-        lastname = ((self.lastnamesLineEdit).strip()).split(" ")
-        country = (self.countryComboBox).strip()
+        name = ((self.namesLineEdit.text()).strip()).split(" ")
+        lastname = ((self.lastnamesLineEdit.text()).strip()).split(" ")
+        country = str(self.countryComboBox.currentText()).strip()
 
         if name[0] == "" or len(name) < 2: 
             self.message_box(title="Atención", message="Revise el Formato:\n1. Nombre vacío\nEs necesario ingresar dos nombres")
