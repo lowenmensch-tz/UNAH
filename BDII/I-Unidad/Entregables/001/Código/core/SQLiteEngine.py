@@ -18,13 +18,19 @@ class SQLiteEngine:
 
 
 
-    #Insertar datos
-    def insert(self, table: str, data: list) -> None: 
+    """
+        Insertar datos
+        parameters ->  (tex_something)
+        values -> (?, ?)
+        data -> ("C", 1972)
+        data -> lang_list = [("Fortran", 1957),("Python", 1991),("Go", 2009),] executemany()
+    """
+    def insert(self, table: str, parameters: str, values: str, data: list) -> None: 
 
-        query = 'Insert INTO {} VALUES (?,?,?)'.format( table )
-        self.cursor.executemany( query, data )
+        query = 'INSERT INTO {} ({}) VALUES {}'.format( table, parameters, values )
+        self.cursor.execute( query, data )
         self.connection.commit()
-
+        print("Done insert")        
 
     
     #SELECT statments
@@ -42,6 +48,7 @@ class SQLiteEngine:
 
         self.cursor.executescript( query )
         self.close_connection()
+        print("Done create")
 
 
     #Cerrar conexión

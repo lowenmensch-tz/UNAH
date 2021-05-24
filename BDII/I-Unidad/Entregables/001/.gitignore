@@ -1,5 +1,6 @@
-#ignoramos la carpeta venv
+#ignoramos la carpeta 'venv', '__pycache__'
 /Código/venv
+/Código/core/__pycache__
 
 #ignorar test.py
 test.py

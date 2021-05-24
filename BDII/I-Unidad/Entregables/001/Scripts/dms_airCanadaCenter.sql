@@ -64,7 +64,7 @@ INSERT INTO Client(id_user_fk, tex_passport) VALUES
 
 
 -- identicador empleado
-INSERT INTO Employee(id_user_fk, dob_salary, tex_hiringDate) VALUES
+INSERT INTO Employee(id_user_fk, dob_salary, tim_hiringDate) VALUES
  (8, 16840.19, '2023-02-27 00:00:00'),
  (9, 10526.36, '2021-05-02 00:00:00'),
  (10, 8434.64, '2020-01-14 00:00:00')

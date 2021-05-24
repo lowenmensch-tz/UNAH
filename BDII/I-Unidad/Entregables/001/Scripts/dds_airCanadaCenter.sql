@@ -55,7 +55,8 @@ CREATE TABLE Employee(
     id_user_fk INTEGER  NOT NULL, -- Definición de Clave foránea que hace referencia a la entidad Usuario, 
     -- tex_codEmployee VARCHAR(12) NOT NULL UNIQUE,-- Código del empleado, es único y alfanúmerico (acepta letras y números)
     dob_salary DOUBLE  NOT NULL, -- Salario del empleado
-    tex_hiringDate TEXT NOT NULL, -- Fecha de contratación, con el siguiente formato: "YYYY-MM-DD HH:MM:SS.SSS" 
+    -- tex_hiringDate TEXT NOT NULL, -- Fecha de contratación, con el siguiente formato: "YYYY-MM-DD HH:MM:SS.SSS" 
+    tim_hiringDate DATE DEFAULT (DATETIME('now','localtime')) NOT NULL,
 
     UNIQUE(id_user_fk),
     FOREIGN KEY (id_user_fk) REFERENCES User(id)
@@ -66,7 +67,8 @@ CREATE TABLE Employee(
 CREATE TABLE Control(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
     bit_type INT2 DEFAULT 0 NOT NULL, -- Tipo de control (0 Salida | 1 Entrada)
-    tex_date TEXT NOT NULL -- Fecha de registro, con el siguiente formato: "YYYY-MM-DD HH:MM:SS.SSS" 
+    --tex_date TEXT NOT NULL -- Fecha de registro, con el siguiente formato: "YYYY-MM-DD HH:MM:SS.SSS" 
+    tim_date DATE DEFAULT (DATETIME('now','localtime')) NOT NULL
 );
 
 
