@@ -1,0 +1,5 @@
+#ignoramos la carpeta venv
+/Código/venv
+
+#ignorar test.py
+test.py
