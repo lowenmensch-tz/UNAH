@@ -26,6 +26,7 @@ class App(QMainWindow, Ui_MainWindow):
         #self.registerPushButton.clicked.connect( self.verify_access_code )
         self.operDoorPushButton.clicked.connect( self.insert_user_in_control )
         self.tabWidget.currentChanged.connect( self.data_visualization )
+        self.tabWidget.currentChanged.connect( self.add_country_combo_box )
         #self.tabWidget.currentChanged.connect( self.user_register )
 
         self.addPushButton.clicked.connect( self.phone_register )
@@ -56,6 +57,7 @@ class App(QMainWindow, Ui_MainWindow):
             else: 
                 self.message_box("Mensaje", "Código de usuario incorrecto")
                 self.idLineEdit.setText("")
+                self.idLineEdit.setFocus()
                 return False
 
         except IndexError as ie: 
@@ -136,6 +138,8 @@ class App(QMainWindow, Ui_MainWindow):
     """
     def user_register(self):
         
+        self.add_country_combo_box()
+
         """
         self.userLineEdit
         self.namesLineEdit
@@ -166,7 +170,7 @@ class App(QMainWindow, Ui_MainWindow):
                             parameters="id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type, tex_accessCode", 
                             values='(?, ?, ?, ?, ?, ?, ?)', 
                             data=(
-                                    self.engine.select(query="SELECT id FROM Country WHERE country = {}".format(country)), name[0], name[1], 
+                                    self.get_country(country), name[0], name[1], 
                                     lastname[0], lastname[1], 1, access_code
                                 )
                         )
@@ -215,9 +219,11 @@ class App(QMainWindow, Ui_MainWindow):
 
         if name[0] == "" or len(name) < 2: 
             self.message_box(title="Atención", message="Revise el Formato:\n1. Nombre vacío\nEs necesario ingresar dos nombres")
+            self.namesLineEdit.setFocus()
             return False
         elif lastname[0] == "" or len(lastname) < 2: 
             self.message_box(title="Atención", message="Revise el Formato:\n1. Apellido vacío\nEs necesario ingresar dos apellidos")
+            self.lastnamesLineEdit.setFocus()
             return False
         elif country == "":
             self.message_box(title="Atención", message="Revise el Formato:\n1. No se ha seleccionado ciudad")
@@ -233,10 +239,11 @@ class App(QMainWindow, Ui_MainWindow):
         
         if self.employeeCheckBox.isChecked():
             salary = (self.salaryLineEdit.text()).strip()
-            hire_date = (self.self.hiringDateEdit.text()).strip()
+            hire_date = (self.hiringDateEdit.text()).strip()
 
             if not salary.isnumeric(): 
                 self.message_box(title="Atención", message="Revise el Formato:\n1. Solo números para Salario")
+                self.salaryLineEdit.setFocus()
                 return False
             elif hire_date == "":
                 self.message_box(title="Atención", message="Revise el Formato:\n1. Seleccione una fecha de contratación")
@@ -253,9 +260,11 @@ class App(QMainWindow, Ui_MainWindow):
         passport = (self.userLineEdit.text()).strip()
         if passport == "":
             self.message_box(title="Atención", message="Revise el Formato:\n1. Ingrese su pasaporte")
+            self.userLineEdit.setFocus()
             return False
         elif re.match(r"[a-zA-Z0-9]{12}", passport): 
             self.message_box(title="Atención", message="Revise el Formato:\n1. La longitud del pasaporte es erronea (12 carácteres)\n2. Solo alfanúmericos")
+            self.userLineEdit.setFocus()
             return False
         else: 
             return True
@@ -271,16 +280,23 @@ class App(QMainWindow, Ui_MainWindow):
             area = (self.areaLineEdit.text()).strip()
             phone = (self.phoneNumberLineEdit.text()).strip()
             
-            if (area == "" or phone == ""):
-                self.message_box(title="Atención", message="Revise el Formato:\n1. Area o número de teléfono vacío")
+            if area == "" :
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Area de teléfono vacío")
+                self.areaLineEdit.setFocus()
+
+            elif phone == "":
+                self.message_box(title="Atención", message="Revise el Formato:\n1. Número de teléfono vacío")
+                self.phoneNumberLineEdit.setFocus()
 
             elif not re.match(r"\+\d{1,3}", area): 
                 self.message_box(title="Atención", message="Revise el Formato:\n1. El número de área debe cumplir: +###, +## o +#\n2. Solo números")
                 self.areaLineEdit.setText("")
+                self.areaLineEdit.setFocus()
                     
             elif not re.match(r"\d+", phone): 
                 self.message_box(title="Atención", message="Revise el Formato:\n1. Solo números para el número de teléfono")
                 self.phoneNumberLineEdit.setText()
+                self.phoneNumberLineEdit.setFocus()
                     
             else: 
 
@@ -292,7 +308,6 @@ class App(QMainWindow, Ui_MainWindow):
                 self.phoneNumberLineEdit.setText("")
 
                 print(self.phonenumber)
-            
     
 
     """
@@ -309,7 +324,39 @@ class App(QMainWindow, Ui_MainWindow):
     """
     def get_last_id_user(self) -> int: 
         try: 
-            get_last_id_user = (self.engine.select(query=" SELECT id FROM vw_getLastIdUser")).pop()
+            get_last_id_user = (self.engine.select(query="SELECT id FROM vw_getLastIdUser")).pop()
             return get_last_id_user[0] + 1
-        finally: 
-            return 1
+        except IndexError as ie: 
+            print("No existen usuarios en la tabla: {}".format(ie))
+
+
+    """
+        Obtiene el id de un país, a partir del nombre del país
+    """
+    def get_country(self, country: str) -> int: 
+        try: 
+            query = "SELECT id FROM Country WHERE tex_name = '{}'".format(country)
+            print( query )
+
+            transaction = self.engine.select(query=query).pop()
+            return transaction[0]
+
+        except IndexError as ie: 
+            print("No existe un valor para country: {}".format(ie))
+        except sqlite3.OperationalError as soe: 
+            print("Error con el nombre de las tablas {}".format(soe))
+
+
+    """
+        Agrega los países al combo box
+    """
+    def add_country_combo_box(self) -> None: 
+        
+        try: 
+            countries = list(map(lambda x: x[0], self.engine.select(query="SELECT tex_name FROM Country")))
+            
+            self.countryComboBox.addItems(countries)
+        except IndexError as ie: 
+            print("Tabla 'Country' vacía {}".format(ie))
+        except sqlite3.OperationalError as soe: 
+            print("Error con el nombre de las tablas {}".format(soe))
