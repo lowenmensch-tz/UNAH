@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import sqlite3
-import string
 import re
+import string
+import sqlite3
 from os import access, terminal_size
-from core.SQLiteEngine import SQLiteEngine
+from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMessageBox
 from core.GenerateCode import AccessCode
 from core.MainWindow import Ui_MainWindow
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QMainWindow
+from core.SQLiteEngine import SQLiteEngine
 from PyQt5.QtWidgets import QTreeWidgetItem
 
 
@@ -25,8 +25,9 @@ class App(QMainWindow, Ui_MainWindow):
         
         #self.registerPushButton.clicked.connect( self.verify_access_code )
         self.operDoorPushButton.clicked.connect( self.insert_user_in_control )
-        self.tabWidget.currentChanged.connect( self.data_visualization )
         self.tabWidget.currentChanged.connect( self.add_country_combo_box )
+        self.tabWidget.currentChanged.connect( self.data_visualization )
+        
         #self.tabWidget.currentChanged.connect( self.user_register )
 
         self.addPushButton.clicked.connect( self.phone_register )
@@ -141,13 +142,13 @@ class App(QMainWindow, Ui_MainWindow):
         self.add_country_combo_box()
 
         """
-        self.userLineEdit
-        self.namesLineEdit
         self.lastnamesLineEdit
-        self.countryComboBox
+        self.passportLineEdit
         self.employeeCheckBox
+        self.countryComboBox
         self.salaryLineEdit
         self.hiringDateEdit
+        self.namesLineEdit
         """
         #Registro de usuario
         if self.tabWidget.currentIndex() == 1: 
@@ -159,38 +160,49 @@ class App(QMainWindow, Ui_MainWindow):
                 name = ((self.namesLineEdit.text()).strip()).split(" ")
                 lastname = ((self.lastnamesLineEdit.text()).strip()).split(" ")
 
+                #Cliente
+                if self.validate_client(): 
+                    access_code = (AccessCode()).generate_access_code(id_user=self.get_last_id_user(), type_user=0)
+                    passport = (self.passportLineEdit.text()).strip()
+
+                    self.execute_insert_data_user(
+                                                    access_code, 
+                                                    country, name, lastname, 
+                                                    table="Client", 
+                                                    parameters="id_user_fk, tex_passport", 
+                                                    data_parameter=passport
+                                                )
+
+                    """                    
+                    self.engine.insert(
+                            table="Employee", 
+                            parameters="id_user_fk, tex_passport", 
+                            values='(?, ?)', 
+                            data=(
+                                    self.get_last_id_user(),
+                                    passport     
+                            )
+                        )
+                    
+                    self.success(access_code, name[0], lastname[0])
+                    """                    
+
                 #Empleado
-                if self.validate_employee(): 
+                elif self.validate_employee(): 
                     
                     access_code = (AccessCode()).generate_access_code(id_user=self.get_last_id_user(), type_user=1)
                     salary = float((self.salaryLineEdit.text()).strip())
 
-                    self.engine.insert(
-                            table="User", 
-                            parameters="id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type, tex_accessCode", 
-                            values='(?, ?, ?, ?, ?, ?, ?)', 
-                            data=(
-                                    self.get_country(country), name[0], name[1], 
-                                    lastname[0], lastname[1], 1, access_code
-                                )
-                        )
+                    #table: str, parameters: str, data_parameter
+                    self.execute_insert_data_user(
+                                                access_code, 
+                                                country, name, lastname, 
+                                                table="Employee", 
+                                                parameters="id_user_fk, dob_salary", 
+                                                data_parameter=salary     
+                                            )
 
-                    if len(self.phonenumber): 
-                        [
-                            self.engine.insert(
-                                    table="Phonenumber", 
-                                    parameters="id_user_fk, tex_prefix, tex_number",
-                                    values='(?, ?, ?)',
-                                    data=(
-                                        self.get_last_id_user(),
-                                        phonenumber[0], 
-                                        phonenumber[1] 
-                                    )
-                                )
-                            
-                            for k, phonenumber in self.phonenumber.items()
-                        ]
-
+                    """
                     self.engine.insert(
                             table="Employee", 
                             parameters="id_user_fk, dob_salary", 
@@ -200,11 +212,72 @@ class App(QMainWindow, Ui_MainWindow):
                                     salary     
                             )
                         )
-
-                    self.message_box(title="Mensaje", message="El usuario: {} Se ha agregado con éxito".format(name[0] + ' ' + lastname[0]))
-                    self.message_box(title="Mensaje", message="Su código de acceso es: {}".format(access_code))
+                    
+                    self.success(access_code, name[0], lastname[0])
+                    """
 
     
+
+    """
+        Inserta los datos para la tabla 'User'
+    """
+    def execute_insert_data_user(self, access_code: str ,country: str ,name: list ,lastname: list, table: str, parameters: str, data_parameter): 
+        
+        try:
+        
+            self.engine.insert(
+                            table="User", 
+                            parameters="id_country_fk, tex_firstname, tex_secondname, tex_firstsurname, tex_secondsurname, bit_type, tex_accessCode", 
+                            values='(?, ?, ?, ?, ?, ?, ?)', 
+                            data=(
+                                    self.get_country(country), name[0], name[1], 
+                                    lastname[0], lastname[1], 1, access_code
+                                )
+                        )
+
+            if len(self.phonenumber): 
+                [
+                    self.engine.insert(
+                            table="Phonenumber", 
+                            parameters="id_user_fk, tex_prefix, tex_number",
+                            values='(?, ?, ?)',
+                            data=(
+                                self.get_last_id_user(),
+                                phonenumber[0], 
+                                phonenumber[1] 
+                            )
+                        )
+                    
+                    for k, phonenumber in self.phonenumber.items()
+                ]
+
+            self.engine.insert(
+                    table=table, 
+                    parameters=parameters, 
+                    values='(?, ?)', 
+                    data=(
+                            self.get_last_id_user(),
+                            data_parameter     
+                    )
+                )
+            
+            self.success(access_code, name[0], lastname[0])
+            self.clean_register_user_screen()
+
+        except sqlite3.OperationalError as soe: 
+            print("Algún error en la ejecución del insert: {}".format(soe))
+
+
+    """
+        Mensaje de éxito sobre el ingreso
+        de los datos en la base de datos
+    """
+    def success(self, access_code: str, name: str, lastname: str) ->  None: 
+
+        self.message_box(title="Mensaje", message="El usuario: {} Se ha agregado con éxito".format(name + ' ' + lastname))
+        self.message_box(title="Mensaje", message="Su código de acceso es: {}".format(access_code))
+
+
     """ 
         Validación de:
         1. Nombres
@@ -257,14 +330,15 @@ class App(QMainWindow, Ui_MainWindow):
     """
     def validate_client(self) -> bool:
         
-        passport = (self.userLineEdit.text()).strip()
+        passport = (self.passportLineEdit.text()).strip()
         if passport == "":
             self.message_box(title="Atención", message="Revise el Formato:\n1. Ingrese su pasaporte")
-            self.userLineEdit.setFocus()
+            self.passportLineEdit.setText("")
+            self.passportLineEdit.setFocus()
             return False
-        elif re.match(r"[a-zA-Z0-9]{12}", passport): 
+        elif not re.match(r"[a-zA-Z0-9]{12}", passport): 
             self.message_box(title="Atención", message="Revise el Formato:\n1. La longitud del pasaporte es erronea (12 carácteres)\n2. Solo alfanúmericos")
-            self.userLineEdit.setFocus()
+            self.passportLineEdit.setFocus()
             return False
         else: 
             return True
@@ -360,3 +434,19 @@ class App(QMainWindow, Ui_MainWindow):
             print("Tabla 'Country' vacía {}".format(ie))
         except sqlite3.OperationalError as soe: 
             print("Error con el nombre de las tablas {}".format(soe))
+
+
+
+
+    """
+        Limpia los LineEdit, ComboBox y CheckBox
+        de la pantalla Registro
+    """
+    def clean_register_user_screen(self) -> None:
+
+        self.lastnamesLineEdit.setText("")
+        self.passportLineEdit.setText("")
+        self.employeeCheckBox.setChecked(False)
+        self.countryComboBox.setCurrentIndex(0)
+        self.salaryLineEdit.setText("")
+        self.namesLineEdit.setText("")
