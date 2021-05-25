@@ -369,7 +369,7 @@ class App(QMainWindow, Ui_MainWindow):
                     
             elif not re.match(r"\d+", phone): 
                 self.message_box(title="Atención", message="Revise el Formato:\n1. Solo números para el número de teléfono")
-                self.phoneNumberLineEdit.setText()
+                self.phoneNumberLineEdit.setText("")
                 self.phoneNumberLineEdit.setFocus()
                     
             else: 
