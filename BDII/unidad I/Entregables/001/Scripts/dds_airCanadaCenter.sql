@@ -8,7 +8,7 @@
 -- Entidad País, contiene la información de cada país del mundo
 CREATE TABLE Country(
     id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    tex_iso VARCHAR(4) NOT NULL UNIQUE, -- El ISO3 es la abreviación internacional estandarizada para cada país
+    tex_iso VARCHAR(4) NOT NULL, -- El ISO3 es la abreviación internacional estandarizada para cada país
     tex_name VARCHAR(35) NOT NULL UNIQUE -- Nombre del país
 );
 
