@@ -8,18 +8,33 @@
 
 <br>
 
-Entorno de configuración necesario para instalar las dependencias del proyecto correspondiente a la clase **Ingeniería de Software (IS 802)**
+Este documento abarca la configuración del entorno necesario para la ejecución del proyecto correspondiente a la clase de **Ingeniería de Software (IS 802)**, este documento esta diseñado para solventar y eficientar el tiempo con respecto a problemas de configuración. Cabe resaltar que cierta nomenclatura no se trata a profundiad, sí desea expandir su conocimiento puede realizar una investigación propia.  
 
-Este documento abarca la instalación del siguiente software:
+Se abarca la instalación del siguiente software:
 
-- Python 3
+- Python 3.8
 - Django 3.2
 - MySQL 5.7
 - Windows 10
-    - Ubuntu 20.04 LTS (WSL)
+    - Ubuntu 20.04 LTS ([WSL](https://docs.microsoft.com/en-us/windows/wsl/))
     - Windows Terminal
 
-Se explota las capacidades y bondades de WSL (Windows Subsystem for Linux) por ser una máquina virtual nativa de Ubuntu en Windows, la mayoría de características han sido probadas.
+WSL (Windows Subsystem for Linux) es una virtualización nativa de Ubuntu para Windows 10, funciona como máquina virtual optimizada, con la salvedad que utiliza el minímo de recursos y viene con algunas configuraciones por defecto (python, git, net-tools...).
+
+Podemos utilizar [WSL](https://docs.microsoft.com/en-us/windows/wsl/) como una máquina virtual instalando programas de distinta índole (MySQL, MariaDB, Python, SQLite3...) sin afectar el sistema de archivos de Windows.  
+Es decir, se puede ejecutar scripts de Python desde WSL sin la necesidad de instalar Python en Windows.
+
+Se explota las capacidades y bondades de [WSL](https://docs.microsoft.com/en-us/windows/wsl/) (Windows Subsystem for Linux) por ser una máquina virtual nativa de Ubuntu en Windows 10, la mayoría de características han sido probadas antes de la realización de este documento.  
+
+Algunas ventajas de realizar este proyecto con esta configuración
+- MySQL tiene soporte con Workbench   
+- Puede ejecutar el servidor de Django desde las instancias de [WSL](https://docs.microsoft.com/en-us/windows/wsl/) y visualizar esos resultados en un navegador desde Windows 10 (accediendo al localhost) 
+- Bajo consumo de recursos
+- Puede utilizar una terminal de Linux en Windows
+- Puede crear varias instancias de una terminal a la vez (Powershell, CMD, Ubuntu, Azure)
+- Los programas instalados en WSL no afectan de forma directa el sistema de archivos de Windows
+
+
 
 ## Índice
 
@@ -30,24 +45,23 @@ Se explota las capacidades y bondades de WSL (Windows Subsystem for Linux) por s
   - [Visual Code](#visual-code)
   - [Configuración de WSL](#configuración-de-wsl)
   - [Configuración de MySQL 5.7](#configuración-de-mysql-57)
-    - [Una vez desempaquetado los binarios, pasamos a la siguiente fase.](#una-vez-desempaquetado-los-binarios-pasamos-a-la-siguiente-fase)
     - [Últimos pasos](#últimos-pasos)
     - [Creación de usuario admin](#creación-de-usuario-admin)
   - [Python y entornos virtuales](#python-y-entornos-virtuales)
     - [**Uso del entorno virtual**](#uso-del-entorno-virtual)
   - [Configuración de Django](#configuración-de-django)
-    - [**Estructura de Archivos:**](#estructura-de-archivos)
+    - [**Estructura de Archivos**](#estructura-de-archivos)
 
 ## Visual Code
 
 ---
 
-Pluggins a instalar (no son indispensables, sin embargo son una herramienta útil)
-
-- **GitLens:** eamodio.gitlens
-- **ErrorLens:** usernamehw.errorlens
-- **Django:** batisteo.vscode-django
-- **Markdown All in One:** yzhang.markdown-all-in-one
+**Pluggins a instalar.**  
+No es necesario ni indispensables su instalación, sin embargo son una herramienta útil que ayuda en la productividad
+- [**GitLens:**](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) eamodio.gitlens
+- [**ErrorLens:**](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) usernamehw.errorlens
+- [**Django:**](https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django) batisteo.vscode-django
+- [**Markdown All in One:**](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one) yzhang.markdown-all-in-one
 
 Para instalar estos plugins en Visual Code es necesario copiar y pegar el id en la sección `Extensions` del editor de texto.
 
@@ -57,13 +71,13 @@ Para instalar estos plugins en Visual Code es necesario copiar y pegar el id en 
 
 ---
 
-Para configurar WSL en Windows 10, debe seguir lo siguiente: 
+Para configurar [WSL](https://docs.microsoft.com/en-us/windows/wsl/) en Windows 10, debe hacer lo siguiente: 
 
-Debe ir a la tienda de Microsoft y escribir **Ubuntu 20.04 LST** una vez hecho esto, clic en Launch
+Ir a la tienda de Microsoft y escribir **Ubuntu 20.04 LST**; clic en Launch
 
 ![images/Screenshot_(214).png](images/Screenshot_(214).png)
 
-Una vez hecho esto puede buscar el programa en su máquina, escribiendo **ubuntu 20.04 LTS**
+Buscar el programa en su máquina; escriba **ubuntu 20.04 LTS**
 
 Aparece una terminal, la Shell de Linux. 
 
@@ -142,7 +156,7 @@ Anotar la versión más reciente que se encuentre en el sistema de paquetes
 $ sudo apt-cache policy mysql-server
 ```
 
-Al ejecutar el comando anterior se visuliza algo similar a lo siguiente: 
+Al ejecutar el comando anterior se visuliza un mensaje similar al siguiente: 
 
 ![images/Screenshot_(201).png](images/Screenshot_(201).png)
 
@@ -150,7 +164,7 @@ La versión resaltada en color gris, es la última disponible para este caso:
 
 **<5.7.34-1ubuntu18.04>**
 
-### Una vez desempaquetado los binarios, pasamos a la siguiente fase.
+**Una vez desempaquetado los binarios, pasamos a la siguiente fase**
 
 Instalación de las instancias del Servidor 
 
@@ -166,8 +180,8 @@ $ sudo apt install -f mysql-server=5.7.34-1ubuntu18.04
 
 ![images/Screenshot_(203).png](images/Screenshot_(203).png)
 
-Realizar cambios de seguridad en el servidor de base de datos
-Evitamos la actualización a MySQL 8.0 , utilizamos el editor por que trae por defecto Ubuntu, *nano*
+Realizamos cambios de seguridad en el servidor de base de datos  
+Utilizamos el editor `nano` que trae por defecto Ubuntu  
 
 ```bash
 $ sudo nano /etc/apt/preferences.d/mysql
@@ -204,7 +218,7 @@ Pin-Priority: 1001
 
 ### Últimos pasos
 
-Iniciamos el servicio de MySQL en WSL
+Iniciamos el servicio de MySQL en [WSL](https://docs.microsoft.com/en-us/windows/wsl/)
 
 ```bash
 $ sudo /etc/init.d/mysql start
@@ -233,6 +247,20 @@ Referencias:
 - [https://www.digitalocean.com/community/questions/completely-uninstall-mysql-server](https://www.digitalocean.com/community/questions/completely-uninstall-mysql-server)
 
 ### Creación de usuario admin
+
+Este usuario será en común para todos los integrantes del equipo para acceder a la base de datos desde la aplicación de Django.   
+Esta no es una buena práctica de programación, es un abuso a la integridad y seguridad de la base de datos.  
+Queda para uso académico y con el fin de la practicidad para este proyecto.  
+
+
+```SQL
+CREATE USER 'admin'@'%' IDENTIFIED BY 'admin';
+GRANT ALL PRIVILEGES ON *.* TO 'admin'@'%';
+FLUSH PRIVILEGES;
+```
+
+![mysql](images/Screenshot_(227).png)
+
 
 ## Python y entornos virtuales
 
@@ -322,13 +350,13 @@ Ejecutar proyecto
 $ python3 manage.py runserver
 ```
 
-Sí todo esta bien, podemos ingresar a nuestro navegador a la siguiente dirección: 
+Sí todo esta bien, puede ingresar al navegador colocando la siguiente dirección: 
 
 ```bash
 http://127.0.0.1:8000/
 ```
 
-### **Estructura de Archivos:**
+### **Estructura de Archivos**
 
 - El archivo vacío **init.py** indica que la carpeta es un módulo de python.
 - El archivo **[settings.py](http://settings.py/)** define todas las configuraciones del proyecto.
