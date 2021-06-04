@@ -51,6 +51,7 @@ Algunas ventajas de realizar este proyecto con esta configuración
     - [**Uso del entorno virtual**](#uso-del-entorno-virtual)
   - [Configuración de Django](#configuración-de-django)
     - [**Estructura de Archivos**](#estructura-de-archivos)
+    - [Conexión: Dango con MySQL 5.7](#conexión-dango-con-mysql-57)
 
 ## Visual Code
 
@@ -262,6 +263,11 @@ FLUSH PRIVILEGES;
 ![mysql](images/Screenshot_(227).png)
 
 
+Se crea una base de datos de ejemplo
+```SQL
+CREATE DATABASE TestConnection CHARACTER SET utf8;
+```
+
 ## Python y entornos virtuales
 
 ---
@@ -306,7 +312,7 @@ Anterior a esto no aparecía, indica que el entorno virtual contenido en la carp
 
 **Desactivar el entorno**
 
-Para desactivar el entorno virtual debemos ubicarnos en la carpeta raíz (la carpeta que contiene las dependencias de Python) del proyecto y escribir en la línea de comando lo siguiente
+Para desactivar el entorno virtual debe ubicarse en la carpeta raíz (la carpeta que contiene las dependencias de Python, es decir la carpeta superior a a la carpeta `venv`) del proyecto y escribir en la línea de comando lo siguiente
 
 ```bash
 $ deactivate
@@ -339,7 +345,7 @@ $ django-admin startproject <name project> .
 ```
 
 Resolver las dependencias
-
+`migrate` Aplicará cambios en nuestra base de datos
 ```bash
 $ python3 manage.py migrate
 ```
@@ -381,11 +387,103 @@ http://127.0.0.1:8000/
     - USE_L10N: Librería para traducción de textos.
     - USE_TZ: Librería de timezone.
     - STATIC_URL: Define la ubicación de los archivos estáticos como css, js, img.
-- El archivo **[urls.py](http://urls.py/)** define el punto de entrada para todas las peticiones que lleguen al proyecto.
-- El archivo **[wsgi.py](http://wsgi.py/)** es utilizado para el deployment a producción.
-- El archivo **[manage.py](http://manage.py/)** es uno que no se debe tocar y permite ejecutar todos los comandos que se hayan definido en las applicaciones instaladas del proyecto (entre ellas las del comando **django-admin**).
-    - Cuando se ejecuta **python3 [manage.py](http://manage.py/)** por cada [nombre_app] se visualizarán los diferentes comandos que se pueden ejecutar por cada aplicación instalada del proyecto (auth, contenttypes, django, sessions, staticfiles).
+- El archivo **urls.py** define el punto de entrada para todas las peticiones que lleguen al proyecto.
+- El archivo **wsgi.py** es utilizado para el deployment a producción.
+- El archivo **manage.py** es uno que no se debe tocar y permite ejecutar todos los comandos que se hayan definido en las applicaciones instaladas del proyecto (entre ellas las del comando **django-admin**).
+    - Cuando se ejecuta **python3 manage.py** por cada [nombre_app] se visualizarán los diferentes comandos que se pueden ejecutar por cada aplicación instalada del proyecto (auth, contenttypes, django, sessions, staticfiles).
 
     **Referencia**
 
     - [https://docs.djangoproject.com/en/3.2/intro/tutorial01/](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
+
+
+### Conexión: Dango con MySQL 5.7
+
+Active su entorno virtual.
+Ejecutamos los siguientes comandos, utilizando el instalador de paquetes `pip` 
+
+```Bash
+#Para parsear archivos .ini
+$ pip3 configparser
+
+#conector de mysql desarrollado por Oracle
+$ pip3 install mysql-connector-python
+
+
+$ pip3 install pymysql
+```
+
+![](images/Screenshot_(231).png)
+
+Una vez hecho esto, debe ir a la carpeta raíz del proyecto y buscar el archivo `__init__.py`, coloca lo siguiente
+```Python
+import pymysql
+pymysql.install_as_MySQLdb()
+import MySQLdb
+``
+
+Guarda y cierre el archivo.
+
+Para crear la conexión de la base de datos con Django, debe realizar ciertos cambios. 
+Modificar el archivo `settings.py` que se encuentra en la carpeta principal del proyecto, buscar la variable `DATABASES`
+```Python
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS': {
+            'read_default_file': '/path/to/my.cnf',
+        },
+    }
+}
+```
+
+Cambiar por lo siguiente
+```Python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'OPTIONS':{
+            'init_command': 'SET default_storage_engine=INNODB',
+        },
+        'NAME':'TestConnection',
+        'USER':'admin',
+        'PASSWORD':'admin',
+        'HOST':'localhost',
+        'PORT':'3306',
+    }
+}
+```
+
+
+Al iniciar el server `python3 manage.py runserver`
+
+![](images/Screenshot_(241).png)
+
+Podemos corregir estas migraciones
+
+```Bash
+python3 manage.py migrate
+```
+
+![](images/Screenshot_(243).png)
+
+
+Como últimas anotaciones haremos la conexión de Workbench a las instancias de MySQL 5.7 instaladas en WSL.  
+
+Descargamos e instalamos el MySQL Workbench
+- [Workbench](https://dev.mysql.com/downloads/workbench/)
+
+
+Ejecutamos el programas 
+![](images/Screenshot_(235).png)
+
+
+Iniciamos una nueva conexión, colocamos un nombre a la conexión y utilizamos las credenciles del usuario `admin`
+![](images/Screenshot_(236).png)
+
+Hacemos un test a la conexión
+![](images/Screenshot_(237).png)
+
+Tenemos una conexión hacia el DBMS utilizando Workbench
+![](images/Screenshot_(238).png)
