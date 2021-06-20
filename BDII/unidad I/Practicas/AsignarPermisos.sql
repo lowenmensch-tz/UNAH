@@ -14,7 +14,7 @@ USE TestUserInDatabase;
 -- Crear usuario
 ---------------------------------------
 CREATE LOGIN neonfoo
-WITH PASSWORD = 'dsA421#$$$#Klm';  
+WITH PASSWORD = '123445';  
 CREATE USER neonfoo FOR LOGIN neonfoo;
 ---------------------------------------
 
@@ -78,7 +78,8 @@ GRANT UPDATE TABLE TO neonfoo;
 ---------------------------------------
 
 
--- Asignar accesos para delete---------------------------------------
+-- Asignar accesos para delete
+---------------------------------------
 USE TestUserInDatabase;
 GRANT DELETE TABLE TO neonfoo;
 ---------------------------------------

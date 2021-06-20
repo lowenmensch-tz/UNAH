@@ -51,7 +51,7 @@ Algunas ventajas de realizar este proyecto con esta configuración
     - [**Uso del entorno virtual**](#uso-del-entorno-virtual)
   - [Configuración de Django](#configuración-de-django)
     - [**Estructura de Archivos**](#estructura-de-archivos)
-    - [Conexión: Dango con MySQL 5.7](#conexión-dango-con-mysql-57)
+    - [Conexión: Django con MySQL 5.7](#conexión-django-con-mysql-57)
 
 ## Visual Code
 
@@ -362,6 +362,10 @@ Sí todo esta bien, puede ingresar al navegador colocando la siguiente direcció
 http://127.0.0.1:8000/
 ```
 
+<br>
+
+![](https://assets.digitalocean.com/articles/eng_python/django/django-3-testsite.png)
+
 ### **Estructura de Archivos**
 
 - El archivo vacío **init.py** indica que la carpeta es un módulo de python.
@@ -397,7 +401,7 @@ http://127.0.0.1:8000/
     - [https://docs.djangoproject.com/en/3.2/intro/tutorial01/](https://docs.djangoproject.com/en/3.2/intro/tutorial01/)
 
 
-### Conexión: Dango con MySQL 5.7
+### Conexión: Django con MySQL 5.7
 
 Active su entorno virtual.
 Ejecutamos los siguientes comandos, utilizando el instalador de paquetes `pip` 
@@ -420,7 +424,7 @@ Una vez hecho esto, debe ir a la carpeta raíz del proyecto y buscar el archivo 
 import pymysql
 pymysql.install_as_MySQLdb()
 import MySQLdb
-``
+```
 
 Guarda y cierre el archivo.
 
