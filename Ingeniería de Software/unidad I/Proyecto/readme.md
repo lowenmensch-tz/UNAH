@@ -139,15 +139,53 @@ $ sudo dpkg-reconfigure mysql-apt-config
 $ sudo apt update
 ```
 
-Al desempaquetar y configurar el paquete verá una ventana similar a la siguiente: 
+<br>
+
+
+**Nota**
+Sí usted visualiza el siguiente mensaje luego de haber actualizado el sistema de paquetes: 
+
+```bash
+sudo apt update
+
+Hit:1 http://security.debian.org stretch/updates InRelease
+Get:2 http://repo.mysql.com/apt/debian stretch InRelease [19.2 kB]
+Hit:3 https://deb.nodesource.com/node_10.x stretch InRelease
+Err:2 http://repo.mysql.com/apt/debian stretch InRelease
+  The following signatures were invalid: EXPKEYSIG 8C718D3B5072E1F5 MySQL Release Engineering 
+Hit:4 https://packages.sury.org/php stretch InRelease
+Ign:5 http://mirrors.digitalocean.com/debian stretch InRelease
+Get:6 http://mirrors.digitalocean.com/debian stretch-updates InRelease [91.0 kB]
+Hit:7 http://mirrors.digitalocean.com/debian stretch Release
+Reading package lists... Done
+...
+...
+```
+
+Debe ejeuctar lo siguiente en la linea de comandos: 
+
+```bash
+$ sudo apt-key adv --keyserver keys.gnupg.net --recv-keys 8C718D3B5072E1F5
+```
+
+Con eso bastará, luego debe ejecutar una vez más:
+```bash
+$ sudo dpkg -i mysql-apt-config_0.8.10-1_all.deb
+```
+Deberá seleccionar la versión especificada en este documento (5.7) y continuar con los pasos descritos más arriba. 
+Sí usted no ha recibido este mensaje, puede continuar con lo siguiente
+
+<br>
+
+
+Al descomprimir el archivo .deb verá una ventana similar a la siguiente: 
 
 ![images/Screenshot_(199).png](images/Screenshot_(199).png)
 
-*Recuerde debe seleccionar mysql-5.7*
 
-Puede seleccionar esta versión, al seleccionar la primera opción de la lista (ENTER), luego de ello aparece la versión requerida, seleccione y continue . 
+Recuerde, debe seleccionar la versión **mysql-5.7** para ello debe presionar el botón ENTER en la primera opción que aparece en la lista de la imagen, esto lo llevará a una segunda venta con una lista de versiones disponibles, seleccione la versión *5.7*, presione ENTER.
 
-Al momento de tener los settings completado, debe dar ENTER a la opción **<Ok>**
+Al momento de tener los settings completados, debe dar ENTER a la opción **<Ok>**
 
 ![images/Screenshot_(202).png](images/Screenshot_(202).png)
 
